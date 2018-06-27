@@ -9,7 +9,6 @@ function gameReset() {
 }
 function gameStart() {
 	reset();
-	start=true;
 	curr=new Array();
 	var img = ["Butterfly-icon", "Dolphin-icon", "Elephant-icon", "Hippopotamus-icon", "Panda-icon", "Turtle-icon", "Butterfly-icon", "Dolphin-icon", "Elephant-icon", "Hippopotamus-icon", "Panda-icon","Turtle-icon"];
 	for(var i=0;i<12;i++)
@@ -25,6 +24,7 @@ function gameStart() {
 																				max = max-1;
 																				document.getElementById("time").innerHTML = "Time: "+max;
 																				if (max <= 0) {
+																					start=true;
 																					clearInterval(tInterval);
 																					document.getElementById("time").innerHTML = "Time: "+max;
 																				}
@@ -35,13 +35,14 @@ function hide() {
 	for(var i=0;i<12;i++){
 		document.getElementById('i'+i).innerHTML = '<img class="image1" src="images/close.png" alt="CLOSE">';
 	}
-	timeOut=setTimeout(result,20000);
-	maxTime=20;
+	//timeOut=setTimeout(result,30000);
+	maxTime=30;
 	timeInterval = setInterval(function () {
 																						maxTime = maxTime-1;
 																						document.getElementById("time").innerHTML = "Time: "+maxTime;
 																						if (maxTime <= 0) {
 																							clearInterval(timeInterval);
+																							alert("Sorry! You Loose");
 																							document.getElementById("time").innerHTML = "Time: "+maxTime;
 																							reset();
 																						}
@@ -50,10 +51,9 @@ function hide() {
 }
 function result() {
 	if(pair==6){
-		alert("Congrats! You Win");
-	}
-	else {
-		alert("Sorry! You Loose");
+		clearInterval(timeInterval);
+		alert("Congrats! You Win : "+score);
+
 	}
 }
 
@@ -87,30 +87,30 @@ function play(y) {
 			x=y;
 			display(y);
 		}
-		else {
-			if(y==x){
+		else if(y==x)
+		{
 				alert("Again Click");
-			}
-			else if(curr[x]===curr[y])
-			{
-				check=true;
-				move=move+1;
-				pair=pair+1;
-				calculate();
-				display(y);
-				curr[x]=undefined;
-				curr[y]=undefined;
-			}
-			else
-			{
-				move=move+1;
-				display(y);
-				setTimeout(function() {
-																document.getElementById('i'+y).innerHTML = '<img class="image1" src="images/close.png" alt="CLOSE">';
-															}, 200
-									);
-
-			}
+		}
+		else if(curr[x]===curr[y])
+		{
+			check=true;
+			move=move+1;
+			pair=pair+1;
+			display(y);
+			calculate();
+			curr[x]=undefined;
+			curr[y]=undefined;
+		}
+		else
+		{
+			check=true;
+			move=move+1;
+			display(y);
+			setTimeout(function() {
+															document.getElementById('i'+y).innerHTML = '<img class="image1" src="images/close.png" alt="CLOSE">';
+															document.getElementById('i'+x).innerHTML = '<img class="image1" src="images/close.png" alt="CLOSE">';
+														}, 200
+								);
 		}
 	}
 	else {
@@ -125,4 +125,5 @@ function display(y) {
 function calculate() {
 	score=score+maxTime*pair;
 	document.getElementById("score").innerHTML = "Score: "+score;
+	result();
 }
